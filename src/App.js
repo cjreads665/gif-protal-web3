@@ -5,6 +5,11 @@ import React, {useEffect,useState} from 'react'
 // Constants
 const TWITTER_HANDLE = '_buildspace';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
+let TEST_GIF = ['https://media.giphy.com/media/2ISXFYCjXQEBW/giphy.gif',
+          'https://media.giphy.com/media/l9jykc3oRi91u/giphy.gif',
+          'https://media.giphy.com/media/Mx8elxpYeWezisxxwr/giphy.gif',
+          'https://media.giphy.com/media/YOl02tQfTbzaCNuj3I/giphy.gif'
+]
 
 const App = () => {
 
@@ -55,6 +60,18 @@ const App = () => {
       </button>
     }
 
+    const renderConnectedContainer =()=>{
+      return <div className="connected-container">
+          <div className="grid-cols-4 grid gap-2">
+            {TEST_GIF.map(gif=>{
+              return <div className="gif-item">
+                <img src={gif} alt={gif}/>
+              </div>     
+            })}
+          </div>
+      </div>
+    }
+
     useEffect(() => {
       const onLoad = async()=> await checkIfWalletConnected()
       window.addEventListener('load',onLoad)
@@ -65,11 +82,12 @@ const App = () => {
     <div className="App">
       <div className="container">
         <div className={walletAddress? "authed-container" : "header-container"}>
-          <p className="header">🖼 GIF Portal</p>
-          <p className="sub-text">
-            View your GIF collection in the metaverse ✨
+          <p className="header">EncoVerse GIFs</p>
+          <p className="sub-text mb-4">
+            GIFs to lift your spirits and brighten your day
           </p>
           {!walletAddress && renderNotConnectedContainer()}
+          {walletAddress && renderConnectedContainer()}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
