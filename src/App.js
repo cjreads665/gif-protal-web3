@@ -14,7 +14,8 @@ let TEST_GIF = ['https://media.giphy.com/media/2ISXFYCjXQEBW/giphy.gif',
 const App = () => {
 
     const [walletAddress, setWalletAddress] = useState(null)
-
+    const [inputVal, setInputVal] = useState('')
+    const [gifList, setGifList] = useState([])
 
     //check if phantom wallet connected or not
     const checkIfWalletConnected = async ()=>{
@@ -51,6 +52,17 @@ const App = () => {
       }
     }
 
+    const submitGif = async()=>{
+      if(inputVal.length>0){
+        console.log('gif link is '+inputVal)
+        setGifList([...gifList,inputVal])
+        setInputVal('')
+      }
+      else{
+        console.log('no link')
+      }
+    }
+
     const renderNotConnectedContainer =()=>{
       return <button
         className='cta-button connect-wallet-button'
@@ -62,8 +74,23 @@ const App = () => {
 
     const renderConnectedContainer =()=>{
       return <div className="connected-container">
-          <div className="grid-cols-4 grid gap-2">
-            {TEST_GIF.map(gif=>{
+        <form onSubmit={(e)=>{
+        e.preventDefault()
+        submitGif()
+        }}>
+          <input type="text" 
+          value={inputVal}
+          onChange={(e)=>{
+            setInputVal(e.target.value)
+          }}
+          />
+          <button type='submit' className='cta-button submit-gif-button'>Submit</button>
+
+        </form>
+
+
+          <div className="flex flex-col mt-2 lg:grid-cols-4 lg:grid gap-2">
+            {gifList.map(gif=>{
               return <div className="gif-item">
                 <img src={gif} alt={gif}/>
               </div>     
@@ -77,6 +104,12 @@ const App = () => {
       window.addEventListener('load',onLoad)
     }, [])
 
+    useEffect(() => {
+      if(walletAddress){
+        console.log('fetching gif list')
+        setGifList(TEST_GIF)
+      } 
+    }, [walletAddress])
 
   return (
     <div className="App">
